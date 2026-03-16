@@ -12,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ANYPOINT_USERNAME: ${{ secrets.anypoint_platform_username }}
-      ANYPOINT_PASSWORD: ${{ secrets.anypoint_platform_password }}
+      ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_PLATFORM_USERNAME }}
+      ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PLATFORM_PASSWORD }}
 
     steps:
     - name: Checkout repository
@@ -54,8 +54,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ANYPOINT_USERNAME: ${{ secrets.anypoint_platform_username }}
-      ANYPOINT_PASSWORD: ${{ secrets.anypoint_platform_password }}
+      ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_PLATFORM_USERNAME }}
+      ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PLATFORM_PASSWORD }}
 
     steps:
 
