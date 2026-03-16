@@ -7,9 +7,13 @@ on:
     branches: [ main ]
 
 jobs:
- 
+
   build:
     runs-on: ubuntu-latest
+
+    env:
+      ANYPOINT_USERNAME: ${{ secrets.anypoint_platform_username }}
+      ANYPOINT_PASSWORD: ${{ secrets.anypoint_platform_password }}
 
     steps:
     - name: Checkout repository
@@ -20,7 +24,7 @@ jobs:
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: 
+        restore-keys: |
           ${{ runner.os }}-maven-
 
     - name: Set up JDK 8
@@ -30,13 +34,10 @@ jobs:
         java-version: 8
 
     - name: Build with Maven
-      run: 
-        mvn -B package \
-        -Danypoint.username=${{ secrets.anypoint_platform_username }} \
-        -Danypoint.password=${{ secrets.anypoint_platform_password }}
+      run: mvn -B package -Danypoint.username=$ANYPOINT_USERNAME -Danypoint.password=$ANYPOINT_PASSWORD
 
     - name: Stamp artifact file name with commit hash
-      run: 
+      run: |
         artifactName1=$(ls target/*.jar | head -1)
         commitHash=$(git rev-parse --short "$GITHUB_SHA")
         artifactName2=$(echo $artifactName1 | sed "s/.jar/-$commitHash.jar/g")
@@ -48,10 +49,13 @@ jobs:
         name: artifacts
         path: target/*.jar
 
-
   deploy:
     needs: build
     runs-on: ubuntu-latest
+
+    env:
+      ANYPOINT_USERNAME: ${{ secrets.anypoint_platform_username }}
+      ANYPOINT_PASSWORD: ${{ secrets.anypoint_platform_password }}
 
     steps:
 
@@ -63,7 +67,7 @@ jobs:
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: 
+        restore-keys: |
           ${{ runner.os }}-maven-
 
     - name: Download artifact
@@ -72,10 +76,9 @@ jobs:
         name: artifacts
 
     - name: Deploy to Sandbox
-      run: 
+      run: |
         artifactName=$(ls *.jar | head -1)
-
         mvn deploy -DmuleDeploy \
-        -Dmule.artifact=$artifactName \
-        -Danypoint.username=${{ secrets.anypoint_platform_username }} \
-        -Danypoint.password=${{ secrets.anypoint_platform_password }}
+          -Dmule.artifact=$artifactName \
+          -Danypoint.username=$ANYPOINT_USERNAME \
+          -Danypoint.password=$ANYPOINT_PASSWORD
