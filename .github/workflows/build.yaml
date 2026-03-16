@@ -20,7 +20,7 @@ jobs:
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
+        restore-keys: 
           ${{ runner.os }}-maven-
 
     - name: Set up JDK 8
@@ -30,13 +30,13 @@ jobs:
         java-version: 8
 
     - name: Build with Maven
-      run: |
+      run: 
         mvn -B package \
         -Danypoint.username=${{ secrets.anypoint_platform_username }} \
         -Danypoint.password=${{ secrets.anypoint_platform_password }}
 
     - name: Stamp artifact file name with commit hash
-      run: |
+      run: 
         artifactName1=$(ls target/*.jar | head -1)
         commitHash=$(git rev-parse --short "$GITHUB_SHA")
         artifactName2=$(echo $artifactName1 | sed "s/.jar/-$commitHash.jar/g")
@@ -63,7 +63,7 @@ jobs:
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
+        restore-keys: 
           ${{ runner.os }}-maven-
 
     - name: Download artifact
@@ -72,11 +72,10 @@ jobs:
         name: artifacts
 
     - name: Deploy to Sandbox
-      run: |
+      run: 
         artifactName=$(ls *.jar | head -1)
 
         mvn deploy -DmuleDeploy \
         -Dmule.artifact=$artifactName \
         -Danypoint.username=${{ secrets.anypoint_platform_username }} \
         -Danypoint.password=${{ secrets.anypoint_platform_password }}
-        
