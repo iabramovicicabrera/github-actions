@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f579c07c-a3aa-42ac-8253-2709c89c7eb7" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="37a176ae-bf20-420c-b7ce-5e88f57610a4" file="properties/${env}-config.yaml" />
+	<api-gateway:autodiscovery apiId="${autodiscovery.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="4f655521-2fae-4bbf-94d5-6fbdfa3e5b7c" flowRef="${autodiscovery.flow}" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="4a5b848b-f5c4-434b-b653-9cc0844579de" file="properties/${env}-config.yaml" key="${secure.key}" />
+	<global-property doc:name="Global Property" doc:id="d0cd47d9-3068-44de-97be-de3065067053" name="env" value="dev" />
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="182c327f-1c2b-4aa3-85f1-0ceabd4757ac" >
+		<salesforce:oauth-user-pass-connection consumerKey="3MVG9fTLmJ60pJ5ITt2qHB3A10HgjuVoN8hGCbE4ZKq7hEgMAE._W.giZtfXwVaM23IEeGkZN46KTbqPXAVlz" consumerSecret="F7B0CD386A3A5786F7FB9C359EB20C1F8EBD069927507AE06ACCF6F8F6A912EE" username="mulesofttest@deloitte.es" password="mulesoft-test-1" securityToken="flD3HTHrMcF3ehnz3yzbpwsRw"/>
+	</salesforce:sfdc-config>
+
+</mule>

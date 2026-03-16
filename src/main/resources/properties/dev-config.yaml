@@ -1,0 +1,18 @@
+http:
+  port: "8081"
+  
+autodiscovery:
+  id: "20781669"
+  flow: "s-test-iabramovicicabrera-main"
+  
+passwords:
+  client_id: "![hK6XnYWyf3ARMH/AAjeQrZkf6U2W143i+zPX2xwe22KFnPdpi+6oGNSBr6alDq1w]"
+  client_secret: "![mWjQrXsuQHTD3CK3eIp82fZ30Iw6aT+IMffJh+oPHFrp2PyccENhvqnOPjGCOBIM]"
+  
+salesforce:
+  conumerKey: 3MVG9fTLmJ60pJ5ITt2qHB3A10HgjuVoN8hGCbE4ZKq7hEgMAE._W.giZtfXwVaM23IEeGkZN46KTbqPXAVlz
+  consumerSecret: F7B0CD386A3A5786F7FB9C359EB20C1F8EBD069927507AE06ACCF6F8F6A912EE
+  Username: mulesofttest@deloitte.es
+  Password: mulesoft-test-1
+  SecurityToken: flD3HTHrMcF3ehnz3yzbpwsRw
+  TokenEndpoint: https://login.salesforce.com/services/oauth2/token

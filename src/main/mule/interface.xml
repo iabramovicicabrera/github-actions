@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd  http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+    <apikit:config name="s-test-iabramovicicabrera-config" api="resource::6101489e-5c21-4270-ba44-d70b9af0f332:s-test-iabramovicicabrera:1.0.4:raml:zip:s-test-iabramovicicabrera.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="s-test-iabramovicicabrera-main" doc:id="a1621a7d-fdf7-4fd4-8f47-da60b56cdb34">
+        <http:listener path="/api/*" config-ref="HTTP_Listener_config">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="s-test-iabramovicicabrera-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:BAD_REQUEST">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Bad request"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">400</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Method not allowed"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">405</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not acceptable"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">406</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Unsupported media type"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">415</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not Implemented"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">501</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="s-test-iabramovicicabrera-console">
+        <http:listener path="/console/*" config-ref="HTTP_Listener_config">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="s-test-iabramovicicabrera-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="get:\accounts:s-test-iabramovicicabrera-config">
+        <logger level="INFO" doc:name="Inicio" doc:id="d4562236-e284-4b4f-8d44-984e5566b096" message="Start get accounts in system" />
+        <choice doc:name="Choice" doc:id="5ebd4c5d-c744-4f75-8d2b-488b00c2bb80">
+            <when expression="#[attributes.queryParams.'id' != null]">
+                <try doc:name="Try" doc:id="6d2b26c8-6f6b-4d69-a792-d167e7f4e20b">
+                    <salesforce:query doc:name="Query" doc:id="ab2d7e7a-0839-4638-a0ac-568e920d9dd8" config-ref="Salesforce_Config">
+                        <salesforce:salesforce-query><![CDATA[SELECT 
+  Id, Name, AccountNumber, Industry, Description, BillingStreet
+FROM Account
+WHERE Id = ':id']]></salesforce:salesforce-query>
+                        <salesforce:parameters><![CDATA[#[output application/java
+---
+{
+	id : attributes.queryParams.id
+}]]]></salesforce:parameters>
+                    </salesforce:query>
+                    <error-handler>
+                        <on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="5e2696a7-6c53-42ce-bc64-5943eacbd668" type="SALESFORCE:INVALID_INPUT">
+                            <set-payload value="#[&quot;ID inválido&quot;]" doc:name="Set Payload" doc:id="328d9b1a-0d7b-45d3-b66c-3ad1d3949fa6" />
+                        </on-error-continue>
+                    </error-handler>
+                </try>
+            </when>
+            <when expression="#[attributes.queryParams.'industry' != null and attributes.queryParams.'industry' != &quot;&quot;]">
+                <salesforce:query doc:name="Query1" doc:id="d903b8fa-8c40-419e-820f-9850146efbf6" config-ref="Salesforce_Config">
+                    <salesforce:salesforce-query><![CDATA[SELECT 
+  Id, Name, AccountNumber, Industry, Description, BillingStreet
+FROM Account
+WHERE Industry = ':industry']]></salesforce:salesforce-query>
+                    <salesforce:parameters><![CDATA[#[output application/java
+---
+{
+	industry : attributes.queryParams.industry
+}]]]></salesforce:parameters>
+                </salesforce:query>
+            </when>
+            <otherwise>
+                <salesforce:query doc:name="Query" doc:id="d3c6bb30-7b9a-48a0-b2c5-beeed24f3200" config-ref="Salesforce_Config">
+                    <salesforce:salesforce-query><![CDATA[SELECT 
+  Id, Name, AccountNumber, Industry, Description, BillingStreet	
+FROM 
+  Account]]></salesforce:salesforce-query>
+                </salesforce:query>
+            </otherwise>
+        </choice>
+        <logger level="INFO" doc:name="payload" doc:id="ff47e072-ff3c-4de6-9b69-f31edb277306" message="#[output application/json --- payload]" />
+        <ee:transform doc:name="Transform Message">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <logger level="INFO" doc:name="Fin" doc:id="04aa13b0-e445-439e-9a25-6a608f6a96b8" message="End get accounts in system" />
+    </flow>
+    <flow name="get:\contact:s-test-iabramovicicabrera-config">
+        <logger level="INFO" doc:name="Fin" doc:id="266c09f7-b2d3-4c51-a79b-5326e3f94c85" message="End get accounts in system" />
+        <salesforce:query doc:name="Query" doc:id="d28e8769-db67-4cef-9055-1813ac353ba9" config-ref="Salesforce_Config">
+            <salesforce:salesforce-query><![CDATA[SELECT 
+  Id, AccountId, LastName, FirstName, Salutation, Name, MailingStreet
+FROM 
+  Contact]]></salesforce:salesforce-query>
+        </salesforce:query>
+        <logger level="INFO" doc:name="payload" doc:id="e5a969c6-bdc7-4883-950d-6835fbcfa2a9" message="#[payload]" />
+        <ee:transform doc:name="Transform Message" doc:id="7660cdce-eb15-4b17-ac83-ba0a284c6da1">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <logger level="INFO" doc:name="Inicio" doc:id="4aa894a4-9304-499d-823a-676066d18015" message="Start get accounts in system" />
+    </flow>
+</mule>
