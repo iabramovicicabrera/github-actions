@@ -25,24 +25,24 @@
 				<version>3.2.0</version>
 			</plugin>
 			<plugin>
-				<groupId>org.mule.tools.maven</groupId>
-				<artifactId>mule-maven-plugin</artifactId>
-				<version>${mule.maven.plugin.version}</version>
-				<extensions>true</extensions>
-				<configuration>
-					<cloudHubDeployement>
-						<uri>https://anypoint.mulesoft.com</uri>
-						<username>{anypoint.username}</username>
-						<password>{anypoint.password}</password>
-						<muleVersion>4.11.0</muleVersion>
-						<applicationName>s-test-iabramovicicabrera</applicationName>
-						<environment>Sandbox</environment>
-						<workerType>MICRO</workerType>
-						<workers>1</workers>
-						<region>us-east-1</region>
-					</cloudHubDeployement>
-				</configuration>
-			</plugin>
+  <groupId>org.mule.tools.maven</groupId>
+  <artifactId>mule-maven-plugin</artifactId>
+  <version>${mule.maven.plugin.version}</version>
+  <extensions>true</extensions>
+  <configuration>
+    <cloudHubDeployment>
+      <uri>https://anypoint.mulesoft.com</uri>
+      <username>${anypoint.username}</username>
+      <password>${anypoint.password}</password>
+      <muleVersion>4.11.0</muleVersion>
+      <applicationName>s-test-iabramovicicabrera</applicationName>
+      <environment>Sandbox</environment>
+      <workerType>MICRO</workerType>
+      <workers>1</workers>
+      <region>us-east-2</region>
+    </cloudHubDeployment>
+  </configuration>
+</plugin>
 		</plugins>
 	</build>
 
