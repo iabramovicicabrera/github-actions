@@ -36,6 +36,3 @@ jobs:
           -DmuleVersion=4.11.0 \
           -Dclient.id="${{ secrets.ANYPOINT_CLIENT_ID }}" \
           -Dclient.secret="${{ secrets.ANYPOINT_CLIENT_SECRET }}"
-          -Dsecret.key="${{ secrets.MULE_SECURE_KEY }}"
-          -Danypoint.platform.client_id="${{ secrets.ANYPOINT_PLATFORM_CLIENT_ID}}"
-          -Danypoint.platform.client_secret="${{ secrets.ANYPOINT_PLATFORM_CLIENT_SECRET}}"
