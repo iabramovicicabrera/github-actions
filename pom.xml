@@ -4,7 +4,7 @@
 
 	<groupId>6101489e-5c21-4270-ba44-d70b9af0f332</groupId>
 	<artifactId>s-test-iabramovicicabrera-app</artifactId>
-	<version>1.0.12</version>
+	<version>1.1.0</version>
 	<packaging>mule-application</packaging>
 
 	<name>s-test-iabramovicicabrera</name>
@@ -44,17 +44,12 @@
 	  	<generateDefaultPublicUrl>true</generateDefaultPublicUrl>
 		</deploymentSettings>
 	  <properties>
-
 		<anypoint.platform.base_uri>https://anypoint.mulesoft.com</anypoint.platform.base_uri>
-
 		<env>dev</env>
-	  </properties>
-	  	  <secureProperties>
-	    <anypoint.platform.client_id>${anypoint.platform.client_id}</anypoint.platform.client_id>
+			    <anypoint.platform.client_id>${anypoint.platform.client_id}</anypoint.platform.client_id>
 	  	<anypoint.platform.client_secret>${anypoint.platform.client_secret}</anypoint.platform.client_secret>
 	  	<secure.key>${secure.key}</secure.key>
-
-	  </secureProperties>
+	  </properties>
     </cloudhub2Deployment>
   </configuration>
 </plugin>
