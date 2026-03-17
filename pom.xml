@@ -4,7 +4,7 @@
 
 	<groupId>6101489e-5c21-4270-ba44-d70b9af0f332</groupId>
 	<artifactId>s-test-iabramovicicabrera-app</artifactId>
-	<version>1.0.9</version>
+	<version>1.0.10</version>
 	<packaging>mule-application</packaging>
 
 	<name>s-test-iabramovicicabrera</name>
@@ -32,9 +32,10 @@
     <cloudhub2Deployment>
       <uri>https://anypoint.mulesoft.com</uri>
       <provider>MC</provider>
+	  <muleVersion>4.11.2</muleVersion>
       <server>Repository</server>
 	  <applicationName>${project.artifactId}</applicationName>
-	  <releaseChannel>NONE</releaseChannel>
+	  <releaseChannel>Edge</releaseChannel>
       <environment>Sandbox</environment>
       <replicas>1</replicas>
 	  <target>Cloudhub-US-East-2</target>
