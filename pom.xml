@@ -30,6 +30,7 @@
   <version>${mule.maven.plugin.version}</version>
   <extensions>true</extensions>
   <configuration>
+  <muleVersion>${app.runtime}</muleVersion>
 	<classifier>mule-application</classifier>
     <cloudhub2Deployment>
       <uri>https://anypoint.mulesoft.com</uri>
