@@ -4,7 +4,7 @@
 
 	<groupId>6101489e-5c21-4270-ba44-d70b9af0f332</groupId>
 	<artifactId>s-test-iabramovicicabrera-app</artifactId>
-	<version>1.0.10</version>
+	<version>1.0.11</version>
 	<packaging>mule-application</packaging>
 
 	<name>s-test-iabramovicicabrera</name>
@@ -42,7 +42,15 @@
       <vCores>0.1</vCores>
 	  <deploymentSettings>
 	  	<generateDefaultPublicUrl>true</generateDefaultPublicUrl>
-	</deploymentSettings>
+		</deploymentSettings>
+	  <properties>
+	  	<secure.key>${secure.key}</secure.key>
+		<env>dev</env>
+	  </properties>
+	  	  <secureProperties>
+	  	<secureProperty>secure.key</secureProperty>
+		<env>dev</env>
+	  </secureProperties>
     </cloudhub2Deployment>
   </configuration>
 </plugin>
