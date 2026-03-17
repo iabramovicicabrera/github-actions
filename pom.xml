@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.mycompany</groupId>
+	<groupId>6101489e-5c21-4270-ba44-d70b9af0f332</groupId>
 	<artifactId>s-test-iabramovicicabrera-app</artifactId>
 	<version>1.0.0</version>
 	<packaging>mule-application</packaging>
@@ -30,16 +30,20 @@
   <version>${mule.maven.plugin.version}</version>
   <extensions>true</extensions>
   <configuration>
+	<classifier>mule-application</classifier>
     <cloudHubDeployment>
       <uri>https://anypoint.mulesoft.com</uri>
-      <username>${anypoint.username}</username>
-      <password>${anypoint.password}</password>
-      <muleVersion>4.11.0</muleVersion>
-      <applicationName>s-test-iabramovicicabrera</applicationName>
+      <provider>MC</provider>
+      <server>Repository</server>
+	  <applicationName>${project.artifactId}</applicationName>
+	  <releaseChannel>NONE</releaseChannel>
       <environment>Sandbox</environment>
-      <workerType>MICRO</workerType>
-      <workers>1</workers>
-      <region>us-east-2</region>
+      <replicas>1</replicas>
+      <vCores>0.1</vCores>
+      <target>Cloudhub-US-East-2</target>
+	  <deploymentSettings>
+	  	<generateDefaultPublicUrl>true</generateDefaultPublicUrl>
+	</deploymentSettings>
     </cloudHubDeployment>
   </configuration>
 </plugin>
@@ -90,6 +94,7 @@
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>
+
 	</dependencies>
 
 	<repositories>
@@ -105,6 +110,12 @@
 			<url>https://repository.mulesoft.org/nexus/repository/releases/</url>
 			<layout>default</layout>
 		</repository>
+		<repository>
+    		<id>Repository</id>
+    		<name>Private Exchange repository</name>
+    		<url>https://maven.anypoint.mulesoft.com/api/v3/organizations/${project.groupId}/maven</url>
+    		<layout>default</layout>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -118,5 +129,12 @@
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
-
+<distributionManagement>
+    <repository>
+        <id>Repository</id>
+        <name>Corporate Repository</name>
+        <url>https://maven.anypoint.mulesoft.com/api/v3/organizations/${project.groupId}/maven</url>
+        <layout>default</layout>
+    </repository>
+</distributionManagement>
 </project>

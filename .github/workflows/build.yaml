@@ -1,137 +1,36 @@
-name: Build and Deploy to Sandbox
+name: Publish to Exchange & Deploy to CH2.0
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-
+    
+jobs:         
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout this repo
+        uses: actions/checkout@v4
 
-    - name: Cache Maven dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
 
-    - name: Set up JDK 8
-      uses: actions/setup-java@v3
-      with:
-        distribution: zulu
-        java-version: 8
-
-    # 🔑 Crear settings.xml con Client Credentials
-    - name: Create Maven settings.xml
-      run: |
-        mkdir -p ~/.m2
-        cat > ~/.m2/settings.xml <<EOF
-        <settings xmlns="http://maven.apache.org/SETTINGS/1.1.0"
-                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0
-                                      http://maven.apache.org/xsd/settings-1.1.0.xsd">
-          <servers>
-            <server>
-              <id>anypoint-exchange-v3</id>
-              <username>~~~Client~~~</username>
-              <password>${ANYPOINT_CLIENT_ID}~?~${ANYPOINT_CLIENT_SECRET}</password>
-            </server>
-            <server>
-              <id>anypoint-exchange-v2</id>
-              <username>~~~Client~~~</username>
-              <password>${ANYPOINT_CLIENT_ID}~?~${ANYPOINT_CLIENT_SECRET}</password>
-            </server>
-            <server>
-              <id>Repository</id>
-              <username>~~~Client~~~</username>
-              <password>${ANYPOINT_CLIENT_ID}~?~${ANYPOINT_CLIENT_SECRET}</password>
-            </server>
-          </servers>
-        </settings>
-        EOF
-      env:
-        ANYPOINT_CLIENT_ID: ${{ secrets.ANYPOINT_CLIENT_ID }}
-        ANYPOINT_CLIENT_SECRET: ${{ secrets.ANYPOINT_CLIENT_SECRET }}
-
-    - name: Build with Maven
-      run: mvn -B package
-
-    - name: Stamp artifact file name with commit hash
-      run: |
-        artifactName1=$(ls target/*.jar | head -1)
-        commitHash=$(git rev-parse --short "$GITHUB_SHA")
-        artifactName2=$(echo $artifactName1 | sed "s/.jar/-$commitHash.jar/g")
-        mv $artifactName1 $artifactName2
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: artifacts
-        path: target/*.jar
-
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Cache Maven dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
-
-    # 🔑 Crear settings.xml otra vez (cada job es independiente)
-    - name: Create Maven settings.xml
-      run: |
-        mkdir -p ~/.m2
-        cat > ~/.m2/settings.xml <<EOF
-        <settings xmlns="http://maven.apache.org/SETTINGS/1.1.0"
-                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0
-                                      http://maven.apache.org/xsd/settings-1.1.0.xsd">
-          <servers>
-            <server>
-              <id>anypoint-exchange-v3</id>
-              <username>~~~Client~~~</username>
-              <password>${ANYPOINT_CLIENT_ID}~?~${ANYPOINT_CLIENT_SECRET}</password>
-            </server>
-            <server>
-              <id>anypoint-exchange-v2</id>
-              <username>~~~Client~~~</username>
-              <password>${ANYPOINT_CLIENT_ID}~?~${ANYPOINT_CLIENT_SECRET}</password>
-            </server>
-            <server>
-              <id>Repository</id>
-              <username>~~~Client~~~</username>
-              <password>${ANYPOINT_CLIENT_ID}~?~${ANYPOINT_CLIENT_SECRET}</password>
-            </server>
-          </servers>
-        </settings>
-        EOF
-      env:
-        ANYPOINT_CLIENT_ID: ${{ secrets.ANYPOINT_CLIENT_ID }}
-        ANYPOINT_CLIENT_SECRET: ${{ secrets.ANYPOINT_CLIENT_SECRET }}
-
-    - name: Download artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: artifacts
-
-    - name: Deploy to Sandbox
-      run: |
-        artifactName=$(ls *.jar | head -1)
-        mvn deploy -DmuleDeploy -Dmule.artifact=$artifactName
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: 8
+      
+      - name: Publish to Exchange
+        run: |
+          mvn deploy --settings .maven/settings.xml -DskipMunitTests \
+          -Dclient.id="${{ secrets.ANYPOINT_CLIENT_ID }}" \
+          -Dclient.secret="${{ secrets.ANYPOINT_CLIENT_SECRET }}"
+      - name: Deploy to CloudHub 2.0
+        run: |
+          mvn deploy --settings .maven/settings.xml -DskipMunitTests -DmuleDeploy \
+          -Dclient.id="${{ secrets.ANYPOINT_CLIENT_ID }}" \
+          -Dclient.secret="${{ secrets.ANYPOINT_CLIENT_SECRET }}" 
