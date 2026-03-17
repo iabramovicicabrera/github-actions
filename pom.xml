@@ -4,7 +4,7 @@
 
 	<groupId>6101489e-5c21-4270-ba44-d70b9af0f332</groupId>
 	<artifactId>s-test-iabramovicicabrera-app</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<packaging>mule-application</packaging>
 
 	<name>s-test-iabramovicicabrera</name>
